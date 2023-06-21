@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AuthenticationService {
 
@@ -52,5 +54,13 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         tokenRepository.save(new Token(jwtToken, user));
         return new AuthenticationResponse(jwtToken);
+    }
+
+    public User getByEmail(String email) throws Exception {
+        return repository.findByEmail(email).orElseThrow(() -> new Exception("RECORD_NOT_FOUND"));
+    }
+
+    public List<User> getAllUsers() {
+        return repository.findAll();
     }
 }
