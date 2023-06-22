@@ -10,7 +10,7 @@ import static ibsu.project.taskmanagementsystem.entities.enums.Permission.TASK_A
 import static ibsu.project.taskmanagementsystem.entities.enums.Permission.TASK_READ;
 
 public enum Role {
-    ADMIN(Set.of(TASK_ADD, TASK_READ));
+    USER(Set.of(TASK_ADD, TASK_READ));
 
     private final Set<Permission> permissions;
 
