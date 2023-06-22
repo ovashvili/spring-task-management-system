@@ -10,5 +10,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TaskRepository  extends JpaRepository<Task, Long> {
-
+    @Query(value = "select * from tasks " +
+            "where active = :active and " +
+            "(:searchText is null or title like :searchText)",
+            countQuery = "select count(*) from tasks " +
+                    "where active = :active and " +
+                    "(:searchText is null or title like :searchText)",
+            nativeQuery = true)
+    Slice<Task> search(@Param("searchText") String searchText, Pageable pageable);
 }

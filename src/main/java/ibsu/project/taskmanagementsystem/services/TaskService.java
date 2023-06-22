@@ -1,6 +1,8 @@
 package ibsu.project.taskmanagementsystem.services;
 
 import ibsu.project.taskmanagementsystem.dto.AddTask;
+import ibsu.project.taskmanagementsystem.dto.SearchTask;
+import ibsu.project.taskmanagementsystem.dto.request.Paging;
 import ibsu.project.taskmanagementsystem.entities.Task;
 import ibsu.project.taskmanagementsystem.entities.User;
 import ibsu.project.taskmanagementsystem.repositories.TaskRepository;
@@ -8,7 +10,10 @@ import ibsu.project.taskmanagementsystem.repositories.UserRepository;
 import ibsu.project.taskmanagementsystem.utils.GeneralUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import java.util.Date;
@@ -58,5 +63,14 @@ public class TaskService {
         }
 
         return taskRepository.save(task);
+    }
+
+    public Slice<Task> search(SearchTask searchTask, Paging paging) {
+        String title = null;
+        if (searchTask.getTitle() != null && !searchTask.getTitle().equals("")) {
+            title = "%" + searchTask.getTitle() + "%";
+        }
+        Pageable pageable = PageRequest.of(paging.getPage(), paging.getSize(), Sort.by("createDate").descending());
+        return taskRepository.search(title, pageable);
     }
 }

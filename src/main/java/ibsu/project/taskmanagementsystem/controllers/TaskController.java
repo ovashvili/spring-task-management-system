@@ -1,10 +1,13 @@
 package ibsu.project.taskmanagementsystem.controllers;
 
 import ibsu.project.taskmanagementsystem.dto.AddTask;
+import ibsu.project.taskmanagementsystem.dto.SearchTask;
+import ibsu.project.taskmanagementsystem.dto.request.RequestData;
 import ibsu.project.taskmanagementsystem.entities.Task;
 import ibsu.project.taskmanagementsystem.services.TaskService;
 import ibsu.project.taskmanagementsystem.utils.GeneralUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
@@ -43,4 +46,11 @@ public class TaskController
         GeneralUtil.checkRequiredProperties(addTask, Arrays.asList("title", "description", "userEmail"));
         return taskService.edit(id, addTask);
     }
+
+    @PreAuthorize("hasAuthority('task:read')")
+    @RequestMapping(value = "/search", method = RequestMethod.POST, produces = {"application/json"})
+    public Slice<Task> search(@RequestBody RequestData<SearchTask> rd) {
+        return taskService.search(rd.getData(), rd.getPaging());
+    }
+
 }
